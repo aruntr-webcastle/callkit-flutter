@@ -41,11 +41,11 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
         private val eventHandlers = mutableListOf<WeakReference<EventCallbackHandler>>()
         private val eventCallbacks = mutableListOf<WeakReference<CallkitEventCallback>>()
 
-        fun sendEvent(event: String, body: Map<String, Any>) {
+        fun sendEvent(event: String, body: Map<String, Any?>) {
             eventHandlers.reapCollection().forEach { it.get()?.send(event, body) }
         }
 
-        fun sendEventCustom(event: String, body: Map<String, Any>) {
+        fun sendEventCustom(event: String, body: Map<String, Any?>) {
             eventHandlers.reapCollection().forEach { it.get()?.send(event, body) }
         }
 
@@ -138,7 +138,7 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
         removeAllCalls(context)
     }
 
-    public fun sendEventCustom(body: Map<String, Any>) {
+    public fun sendEventCustom(body: Map<String, Any?>) {
         eventHandlers.reapCollection().forEach {
             it.get()?.send(CallkitConstants.ACTION_CALL_CUSTOM, body)
         }
@@ -335,7 +335,7 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
     class EventCallbackHandler : EventChannel.StreamHandler {
         private var eventSink: EventChannel.EventSink? = null
         override fun onListen(arguments: Any?, sink: EventChannel.EventSink) { eventSink = sink }
-        fun send(event: String, body: Map<String, Any>) {
+        fun send(event: String, body: Map<String, Any?>) {
             Handler(Looper.getMainLooper()).post {
                 eventSink?.success(mapOf("event" to event, "body" to body))
             }
